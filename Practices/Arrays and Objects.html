@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Arrays and Objects</title>
+    </head>
+    <body>
+        <h1>Arrays and Objects</h1>
+        <script>
+            // Example of an array of objects
+            const fruits = {
+                name: ["apple", "banana", "lime"],
+                color: ["red", "yellow", "green"],
+                num: [3, 4, 2]
+            };
+            document.write("<h2>Fruits Array of Objects</h2>");
+            document.write(fruits.name[0] + " is " + fruits.color[0] + " and there are " + fruits.num[0] + " of them.<br>");
+            document.write(fruits["name"][1] + " is " + fruits["color"][1] + " and there are " + fruits["num"][1] + " of them.<br>");
+            document.write(fruits.name[2] + " is " + fruits.color[2] + " and there are " + fruits.num[2] + " of them.<br>");
+            document.write(fruits.name + "<br>" + fruits.color + "<br>" + fruits.num);
+        </script>
+    </body>
+    
+</html>

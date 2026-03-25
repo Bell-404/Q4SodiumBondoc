@@ -4,7 +4,7 @@
         <title>Graded Excercise 1</title>
         <link rel="stylesheet" href="styles.css">
         <!-- Font Awesome Icon Library for stars -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
 
     <body>
@@ -14,7 +14,7 @@
         <br><br>
 
         <div>
-            <form onsubmit="return validateForm()">
+            <form id="movieForm">
                 <h2>Add a Movie</h2>
 
                 <!--Input movie title & year-->
@@ -43,11 +43,11 @@
                 <label for="rating">Rating:</label><br>
                 
                 <div class="star-rating">
-                    <span class="fa fa-star" data-rating="1"></span>
-                    <span class="fa fa-star" data-rating="2"></span>
-                    <span class="fa fa-star" data-rating="3"></span>
-                    <span class="fa fa-star" data-rating="4"></span>
-                    <span class="fa fa-star" data-rating="5"></span>
+                    <span class="fas fa-star" data-rating="1"></span>
+                    <span class="fas fa-star" data-rating="2"></span>
+                    <span class="fas fa-star" data-rating="3"></span>
+                    <span class="fas fa-star" data-rating="4"></span>
+                    <span class="fas fa-star" data-rating="5"></span>
                 </div>
 
                 <!--Form submit button-->
@@ -57,93 +57,148 @@
 
                 <!--Movie input list-->
                 <div class="movielist">
-                    <h2>Movie List</h2>
                     <ul id="movie-list">
                         <!-- Movie items will be added here -->
                     </ul>
                 </div>
             </form>
         </div>
+
+
     </body>
 
     <script>
-        //validate form input
-        function validateForm() {
-            const title = document.querySelector('#title').value;
-            const year = document.querySelector('#year').value;
-            if (title === '' || year === '') {
-                alert('Please fill in all fields');
-                return false;
+        //helpers for localStorage
+        const KEY = 'movies';
+        function loadMovies() {
+            const raw = localStorage.getItem(KEY);
+            return raw ? JSON.parse(raw) : [];
+        }
+        function saveMovies(movies) {
+            localStorage.setItem(KEY, JSON.stringify(movies));
+        }
+
+        //render list to page
+        function renderMovies() {
+            const movies = loadMovies(); //get movies from localStorage
+            const list = document.getElementById('movie-list');
+            if (movies.length === 0) {
+                list.innerHTML = '<li>No movies added yet.</li>';
+                document.getElementById('average-rating').innerHTML = '';
+                return;
             }
-            clearForm();
-            return true;
+            list.innerHTML = movies.map((m,i) => //use index for delete reference
+                `<li>
+                    ${m.title} (${m.year}) - ${m.genre} - Rating: ${generateStars(m.rating)}
+                    <button onclick="deleteMovie(${i})">Delete</button>
+                </li>`
+            ).join(''); //render list items with delete buttons
+            
+            //display average rating
+            const averageRating = calculateAverageRating(movies);
+            document.getElementById('average-rating').innerHTML = `Average Rating: ${generateStars(Math.round(averageRating))} (${averageRating.toFixed(1)} stars)`;
         }
 
-        // clear form after submission
-        function clearForm() {
-            document.querySelector('#title').value = '';
-            document.querySelector('#year').value = '';
-            document.querySelector('#genre').value = 'Action';
-            document.querySelectorAll('.star-rating .fa-star').forEach(s => s.classList.remove('checked'));
-        }
-        
-        // load saved data or start fresh
-        let movies = JSON.parse(localStorage.getItem('movies')) || [];
-        const movieList = document.getElementById('movie-list');
-        
-        // function to display movies on the page
-        function displayMovies() {
-            movieList.innerHTML = '';
-            movies.forEach((movie, index) => {
-                const li = document.createElement('li');
-                li.textContent = `${movie.title} (${movie.year}) - ${movie.genre} - Rating: ${findAverageRating(movie)} stars`;
-                movieList.appendChild(li);
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('click', function() {deleteMovie(index)});
-                li.appendChild(deleteBtn);
-            });
+        //function to calculate average rating
+        function calculateAverageRating(movies) {
+            if (movies.length === 0) return 0;
+            const totalRating = movies.reduce((sum, movie) => sum + parseFloat(movie.rating || 0), 0);
+            return totalRating / movies.length;
         }
 
-        // handle form submission
-        document.querySelector('form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const title = document.querySelector('#title').value;
-            const year = document.querySelector('#year').value;
-            const genre = document.querySelector('#genre').value;
-            const rating = document.querySelector('.star-rating .fa-star.checked') ? document.querySelector('.star-rating .fa-star.checked').getAttribute('data-rating') : 0;
-            const newMovie = { title, year, genre, rating };
-            movies.push(newMovie);
-            localStorage.setItem('movies', JSON.stringify(movies));
-            displayMovies();
+        //function to generate star icons
+        function generateStars(rating) {
+            let stars = '';
+            const numRating = parseFloat(rating) || 0;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= numRating) {
+                    //full star
+                    stars += `<span class="fas fa-star checked"></span>`;
+                } else if (i - 0.5 <= numRating) {
+                    //half star - using CSS clip-path for better control
+                    stars += `<span class="fas fa-star checked half-star"></span>`;
+                } else {
+                    //empty star
+                    stars += `<span class="far fa-star"></span>`;
+                }
+            }
+            return `<div class="star-rating">${stars}</div>`;
+        }
 
-        })
+        //form handling
+        const form = document.getElementById('movieForm');
+        form.onsubmit = e => {
+            e.preventDefault(); //prevent page refresh on form submit
+            const title = document.getElementById('title').value.trim();
+            const year = document.getElementById('year').value.trim();
+            const genre = document.getElementById('genre').value;
+            const rating = Array.from(document.querySelectorAll('.star-rating .fas.fa-star.checked'))
+                .map(star => parseInt(star.dataset.rating))
+                .sort((a, b) => b - a)[0] || 0;
+            if (!title || !year) return; //basic validation
 
-        // star rating selection
-        document.querySelectorAll('.star-rating .fa-star').forEach(star => {
-            star.addEventListener('click', function() {
-                document.querySelectorAll('.star-rating .fa-star').forEach(s => s.classList.remove('checked'));
-                this.classList.add('checked');
-            });
+            const movies = loadMovies(); //get existing movies from localStorage
+            
+            //check if movie already exists (same title and year)
+            const existingMovieIndex = movies.findIndex(movie => 
+                movie.title.toLowerCase() === title.toLowerCase() && movie.year === year
+            );
+            
+            if (existingMovieIndex !== -1) {
+                //movie exists, calculate average rating
+                const existingMovie = movies[existingMovieIndex];
+                const currentRating = parseFloat(existingMovie.rating) || 0;
+                const newRating = parseFloat(rating) || 0;
+                const averageRating = (currentRating + newRating) / 2;
+                
+                //update existing movie with average rating
+                existingMovie.rating = averageRating.toFixed(1); //keep one decimal place
+                existingMovie.genre = genre; //also update genre in case it changed
+            } else {
+                //movie doesn't exist, add as new
+                const object = { title, year, genre, rating };
+                movies.push(object);
+            }
+            
+            saveMovies(movies); //save updated movies to localStorage
+            form.reset(); //clear form fields
+            clearStarRating(); //clear star selection
+            renderMovies(); //re-render list to show updated movie
+        };
+
+        //computing star ratings
+        document.querySelectorAll('.star-rating .fas.fa-star').forEach(star => {
+            star.onclick = () => {
+                const rating = star.dataset.rating;
+                document.querySelectorAll('.star-rating .fas.fa-star').forEach(s => {
+                    s.classList.toggle('checked', s.dataset.rating <= rating);
+                });
+            };
         });
-        // find the average rating of each movie
-        function findAverageRating(movie) {
-            const ratings = movies.filter(m => m.title === movie.title).map(m => parseInt(m.rating));
-            const average = ratings.reduce((a, b) => a + b, 0) / ratings.length;
-            return average.toFixed(1);
+
+        //function to clear star rating selection
+        function clearStarRating() {
+            document.querySelectorAll('.star-rating .fas.fa-star').forEach(star => {
+                star.classList.remove('checked');
+            });
         }
 
-        // display movies on page load
-        displayMovies();
-
-        // delete a movie from the list
-        function deleteMovie(index) {
-            confirm('Are you sure you want to delete this movie?');
-            movies.splice(index, 1);
-            localStorage.setItem('movies', JSON.stringify(movies));
-            displayMovies();
+        //remove an item from localStorage
+        function deleteMovie(i) {
+            var confirmDelete = confirm("Are you sure you want to delete this movie?");
+            if (!confirmDelete) return; //if user cancels, do nothing
+            else {
+                const movies = loadMovies();
+                movies.splice(i, 1);
+                saveMovies(movies);
+                renderMovies();
+            }
         }
 
+        //initial render on page load
+        renderMovies();
+        clearStarRating(); //ensure no stars are pre-selected on page load
 
     </script>
 </html>

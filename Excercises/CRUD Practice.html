@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+    <meta charset="utf-8">
+    <title>Notes Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width:700px; margin:20px; }
+        input, button { padding:8px; margin:4px 0; }
+        li { margin:6px 0; }
+    </style>
+    </head>
+    <body>
+    <h2>Save a Note</h2>
+    <form id="noteForm">
+        <input id="name" placeholder="Your name" required>
+        <input id="note" placeholder="Short note" required>
+        <button type="submit">Save</button>
+    </form>
+
+    <h3>Saved Notes</h3>
+    <ul id="list"></ul>
+
+    <script>
+        //helpers for localStorage
+        const KEY = 'notes';
+        
+        function loadNotes() {
+            const raw = localStorage.getItem(KEY);
+            return raw ? JSON.parse(raw) : [];
+        }
+
+        function saveNotes(notes) {
+            localStorage.setItem(KEY, JSON.stringify(notes));
+        }
+
+        //rendering list to page
+        function renderNotes() {
+            const notes = loadNotes(); //get notes from localStorage
+            const list = document.getElementById('list');
+            if (notes.length === 0) {
+                list.innerHTML = '<li>No notes saved yet.</li>';
+                return;
+            }
+            list.innerHTML = notes.map((n,i) => //use index for delete reference
+                `<li>
+                    ${(n.name)}: ${(n.note)}
+                    <button onclick="editNote(${i})">Edit</button>
+                    <button onclick="deleteNote(${i})">Delete</button>
+                </li>`
+            ).join(''); //render list items with delete buttons
+        }
+
+        //form handling
+            const form = document.getElementById('noteForm');
+            form.onsubmit = e => {
+                e.preventDefault(); //prevent page refresh on form submit
+                const name = document.getElementById('name').value.trim();
+                const note = document.getElementById('note').value.trim();
+                if (!name || !note) return; //basic validation
+
+                const object = { name, note }; //create object to save
+                const notes = loadNotes(); //get existing notes from localStorage
+                notes.push(object); //add new note to array
+                saveNotes(notes); //save updated notes to localStorage
+                form.reset(); //clear form fields
+                renderNotes(); //re-render list to show new note
+            }
+        //removing an item from locaStorage by index
+            function deleteNote(i) {
+                const notes = loadNotes();
+                notes.splice(i, 1);
+                saveNotes(notes);
+                renderNotes();
+            }
+        //editing an item from localStorage by index
+            function editNote(i) {
+                const notes = loadNotes(); //get notes from localStorage
+                const note = notes[i];  //get note to edit by index
+                const newNote = prompt('Edit your note:', note.note); //prompt user for new note text
+                if (newNote !== null) { //if user didn't cancel
+                    note.note = newNote.trim(); //update note text
+                    saveNotes(notes); //save updated notes to localStorage
+                    renderNotes(); //re-render list to show changes
+                }
+            }
+        //initial render on page load
+        renderNotes();
+    </script>
+</html>

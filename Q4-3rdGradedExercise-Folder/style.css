@@ -25,7 +25,6 @@ Requirements for the navigation:
 nav {
     width: 100%;
     background-color: #333;
-    display: flex;
 }
 
 nav a {
@@ -36,7 +35,7 @@ nav a {
     text-decoration: none;
 }
 
-nav a:hover {
+nav a :hover {
     background-color: #ddd;
     color: black;
 }

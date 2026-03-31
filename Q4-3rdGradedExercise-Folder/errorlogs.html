@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="author" content="Audrey Cayabyab and Bell Bondoc">
+  <meta name="description" content="testing and debugging">
+  <meta name="keywords" content="testing and debugging">
+  <title>CS3 </title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins:wght@300&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+  <style>
+    tr:nth-child(1) ~ tr:nth-child(odd) {
+      background-color: lightgray;
+      color: black;
+    }
+    td, th {
+      padding: 10px;
+    }
+    table {
+      width: 90%;
+      margin: 0 auto;
+    }
+    caption {
+      font-size: 2em;
+      font-weight: bold;
+      padding: 10px;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <a href="index.html#start">Table</a>
+      <a href="index.html#input">Input</a>
+      <a href="index.html#output">Output</a>
+    </nav>
+    
+    <h1 style="padding: 30px">Audrey Cayabyab and Bell Bondoc / Sodium Mar 2026 </h1>
+  </header>
+
+  <section id="table">
+    <table> 
+      <caption> Error Logs - place errors found in the table below</caption>
+      <tr class="rColor">
+        <th> item# </th> 
+        <th> code line#<br/>CSS or JS </th> 
+        <th> Description</th>
+        <th> Correction Done</th>
+      </tr>
+      <tr>
+        <td> 1 </td> 
+        <td> code line 26 JS </td> 
+        <td> The function plotPoint determines the position of the point and gets the corresponding output based on the input</td>
+        <td> It was missing a curly bracket so I added another curly bracket at the end of the function </td>
+      </tr>
+      <tr>
+        <td> 2 </td> 
+        <td> code line 1 JS</td> 
+        <td> The function plotPoint gives the corresponding output </td>
+        <td> It was supposed to receive the user's inputs but since it has no parameters it will output stuff but will notgive the actual corresponding output. So I added the parameters
+            x, y, x0, and y0. </td>
+      </tr>
+      <tr>
+        <td> 3 </td> 
+        <td> code line 12 JS </td> 
+        <td> It gets the value of the id "out1" then outputs "NE"</td>
+        <td> I changed it the out1.innerHTML to document.getElementById("out1").innerHTML</td>
+      </tr>
+      <tr>
+        <td> 4 </td> 
+        <td> code line 15 JS</td> 
+        <td> It gets the value of the id "out1" then outputs "SO"</td>
+        <td> I changed it the "out1.innerHTML" to "document.getElementById("out1").innerHTML"</td>
+      </tr>
+      <tr>
+        <td> 5 </td> 
+        <td> code line 18 JS</td> 
+        <td> It gets the value of the id "out1" then outputs "SE"</td>
+        <td> I changed it the "out1.innerHTML" to "document.getElementById("out1").innerHTML"</td>
+      </tr>
+      <tr>
+        <td> 6 </td> 
+        <td> code line 21 JS</td> 
+        <td> It gets the value of the id "out1" then outputs "NO"</td>
+        <td> I changed it the "out1.innerHTML" to "document.getElementById("out1").innerHTML"</td>
+      </tr>
+      <tr>
+        <td> 7 </td> 
+        <td> code line 21 JS</td> 
+        <td> It gets the value of the id "out1" then outputs "divisa"</td>
+        <td> I changed it the "out1.innerHTML" to "document.getElementById("out1").innerHTML"</td>
+      </tr>
+      <tr>
+        <td> 8 </td> 
+        <td> code line 3 JS </td> 
+        <td> It gets the id of an elemnt called 'in1' and changes its values to the coordinates</td>
+        <td> I changed the "in1.innerHTML" to "document.getElementById("in1").innerHTML"</td>
+      </tr>
+      <tr>
+        <td> 9 </td> 
+        <td> code line 54 CSS</td> 
+        <td> It shhows the point and its location </td>
+        <td> Elements by default are static, so I made its position absolute so that its position will be unaffected by other elements and whenver a new point is made it will always be inside the coordinate plane
+          because it is the nearest non-static element.
+        </td>
+      </tr>
+      <tr>
+        <td> 10 </td> 
+        <td> code line 28 CSS, code line 39 CSS </td> 
+        <td> The navigation was not displayed in one line (code line 28), the hover effect was not working (code line 39)</td>
+        <td> "display: flex" was added to code line 28 and the space in "nav a :hover" was removed to be "nav a:hover" </td>
+      </tr>
+     
+    </table>
+    <hr>
+  </section>
+  
+   
+  <!--- anchors for socmed site are done with image sprites -->
+  <footer>
+    <a href="https://facebook.com"> 
+    <div class="icon facebook"></div>
+    </a>
+    <a href="https://twitter.com">
+    <div class="icon twitter"></div>
+    </a>
+    <a href="https://github.com">
+    <div class="icon github"></div>
+    </a>
+  </footer>
+ 
+</body>
+
+</html>

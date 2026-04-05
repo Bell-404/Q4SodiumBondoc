@@ -111,7 +111,7 @@
     4. The notice appears on top of content because of the z-index, which indicates the positioning of elements from back (1) to front. If you swap the index values, .notice will appear behind .content/their positions will swap.
 
     ##### Challenge
-    1. ![My Photo](photo.jpg)
+    1. ![My Photo](SW2 Image.HEIC)
     2. Relative : .content becomes 66px above and 200 px to the right of its default static positon.
        Fixed : .content is still at the same position as it was with absolute, it stays in place on the viewport when scrolling.
     3. An element with a higher z-index will be in front of elements with lower z-index.

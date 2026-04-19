@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CSS Animation</title>
+        <style>
+            .sprite {
+                background-image: url('Teruteru.png');
+                width: 40px;
+                height: 40px;
+                animation: move 1s steps(4) infinite;
+            }
+            @keyframes move {
+                from{ background-position: -0px 0; }
+                to{ background-position:  -50px 0; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="sprite"></div>
+    </body>
+</html>
